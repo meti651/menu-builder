@@ -3,6 +3,7 @@ import { authorize } from '../security'
 import { Request, Response } from 'express'
 import { RateLimiterRedis } from 'rate-limiter-flexible'
 import * as redis from 'redis'
+import { IUserLoginData } from '../security/type'
 
 const redisClient = redis.createClient({
   disableOfflineQueue: true
@@ -50,34 +51,38 @@ export async function loginRoute(req: Request, res: Response): Promise<void> {
     res.set('Retry-After', String(retrySecs))
     res.status(429).send('Too Many Requests')
   } else {
-    const user = authorize(req.body.email, req.body.password)
+    const user = await authorize(req.body.email, req.body.password)
     if (!user.isLoggedIn) {
-      // Consume 1 point from limiters on wrong attempt and block if limits reached
-      try {
-        const promises = [limiterSlowBruteByIP.consume(ipAddr)]
-        if (user.exists) {
-          // Count failed attempts by Username + IP only for registered users
-          promises.push(limiterConsecutiveFailsByUsernameAndIP.consume(usernameIPkey))
-        }
-
-        await Promise.all(promises)
-
-        res.status(400).end('email or password is wrong')
-      } catch (rlRejected: any) {
-        if (rlRejected instanceof Error) {
-          throw rlRejected
-        } else {
-          res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || '1')
-          res.status(429).send('Too Many Requests')
-        }
-      }
+      await handleWrongAttempt(ipAddr, usernameIPkey, user, res)
     }
 
     if (user.isLoggedIn) {
       if (resUsernameAndIP !== null && resUsernameAndIP.consumedPoints > 0) {
         await limiterConsecutiveFailsByUsernameAndIP.delete(usernameIPkey)
       }
-      req.session!.user = res.end('authorized')
+      req.session!.user = user.id
+      res.end('authorized')
+    }
+  }
+}
+
+const handleWrongAttempt = async (ipAddr: string, usernameIPkey: string, user: IUserLoginData, res: Response) => {
+  try {
+    const promises = [limiterSlowBruteByIP.consume(ipAddr)]
+    if (user.exists) {
+      // Count failed attempts by Username + IP only for registered users
+      promises.push(limiterConsecutiveFailsByUsernameAndIP.consume(usernameIPkey))
+    }
+
+    await Promise.all(promises)
+
+    res.status(400).end('email or password is wrong')
+  } catch (rlRejected: any) {
+    if (rlRejected instanceof Error) {
+      throw rlRejected
+    } else {
+      res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || '1')
+      res.status(429).send('Too Many Requests')
     }
   }
 }

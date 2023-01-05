@@ -4,6 +4,8 @@ import express, { Express, Request, Response, NextFunction } from 'express'
 import path from 'path'
 import userApi from './api/user.controller'
 import recipeApi from './api/recipe.controller'
+import ingredientApi from './api/ingredient.controller'
+import menuApi from './api/menu.controller'
 import login from './login'
 import helmet from 'helmet'
 import session from 'cookie-session'
@@ -14,8 +16,8 @@ const PORT = process.env.PORT || 3001
 app.set('trust proxy', 1)
 app.use(
   session({
-    name: 'recipe-builder',
-    keys: ['WBF+56ab8k0et5XzeccCbF1Vq+e2+aHJwDmF1GVwlLg=', 'v3uVpMtXo+Y382DdLV16Y2HLCGUqe37nN9m+XO2pGaY='],
+    name: 'recipe-builder-session',
+    keys: process.env.SESSION_KEYS?.split(','),
     maxAge: 24 * 60 * 60 * 1000
   })
 )
@@ -44,10 +46,12 @@ app.use('/api', async (req, res, next) => {
     next()
     return
   }
-  res.redirect('LOGIN_PATH')
+  res.status(301).send('LOGIN_PATH')
 })
 app.use('/api/users', userApi)
 app.use('/api/recipe', recipeApi)
+app.use('/api/ingredient', ingredientApi)
+app.use('/api/menu', menuApi)
 app.use('/login', login)
 
 app.use((req, res, next) => {
@@ -63,8 +67,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Something broke!')
 })
 
-prisma.$connect()
-
-app.listen(PORT, () => {
-  console.log(`Server started at port ${PORT}`)
+prisma.$connect().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server started at port ${PORT}`)
+  })
 })

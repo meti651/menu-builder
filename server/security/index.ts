@@ -1,13 +1,33 @@
-export interface IUserLoginData {
-  isLoggedIn: boolean;
-  exists: boolean;
-  id: String;
-}
+import prisma from '../../prisma/prisma'
+import { IUserLoginData } from './type'
+import bcrypt from 'bcryptjs'
 
-export const authorize = (email: String, psw: String): IUserLoginData => {
+export const authorize = async (email: string, psw: string): Promise<IUserLoginData> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  })
+
+  if (!user) {
+    return {
+      isLoggedIn: false,
+      exists: false
+    }
+  }
+
+  const correctPsw = bcrypt.compareSync(psw, user.passwordHash)
+
+  if (!correctPsw) {
+    return {
+      isLoggedIn: false,
+      exists: true
+    }
+  }
+
   return {
     isLoggedIn: true,
     exists: true,
-    id: "1",
-  };
-};
+    id: user.id
+  }
+}
