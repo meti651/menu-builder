@@ -1,9 +1,9 @@
-import prisma from '../../prisma/prisma'
 import { authorize } from '../security'
 import { Request, Response } from 'express'
 import { RateLimiterRedis } from 'rate-limiter-flexible'
 import * as redis from 'redis'
 import { IUserLoginData } from '../security/type'
+import { findUserById } from '../services/user.service'
 
 const redisClient = redis.createClient({
   disableOfflineQueue: true
@@ -66,7 +66,7 @@ export async function loginRoute(req: Request, res: Response): Promise<void> {
   }
 }
 
-const handleWrongAttempt = async (ipAddr: string, usernameIPkey: string, user: IUserLoginData, res: Response) => {
+export const handleWrongAttempt = async (ipAddr: string, usernameIPkey: string, user: IUserLoginData, res: Response) => {
   try {
     const promises = [limiterSlowBruteByIP.consume(ipAddr)]
     if (user.exists) {
@@ -91,11 +91,7 @@ export const isAuthorized = async (req: Request, res: Response) => {
   if (req.session == null) {
     return false
   }
-  const user = await prisma.user.findUnique({
-    where: {
-      id: req.session.user
-    }
-  })
+  const user = await findUserById(req.session.user)
   if (user) {
     return true
   }
