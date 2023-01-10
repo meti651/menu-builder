@@ -28,7 +28,7 @@ export const limiterConsecutiveFailsByUsernameAndIP = new RateLimiterRedis({
   blockDuration: 60 * 60 // Block for 1 hour
 })
 
-export const getUsernameIPkey = (username: String, ip: String) => `${username}_${ip}`
+export const getUsernameIPkey = (username: string, ip: string) => `${username}_${ip}`
 
 export async function loginRoute(req: Request, res: Response): Promise<void> {
   const ipAddr = req.ip
@@ -66,7 +66,12 @@ export async function loginRoute(req: Request, res: Response): Promise<void> {
   }
 }
 
-export const handleWrongAttempt = async (ipAddr: string, usernameIPkey: string, user: IUserLoginData, res: Response) => {
+export const handleWrongAttempt = async (
+  ipAddr: string,
+  usernameIPkey: string,
+  user: IUserLoginData,
+  res: Response
+) => {
   try {
     const promises = [limiterSlowBruteByIP.consume(ipAddr)]
     if (user.exists) {
