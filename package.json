@@ -24,6 +24,7 @@
     "start": "node dist/server/index.js",
     "compile": "npx tsc",
     "dev": "yarn run build-fr && concurrently \"npx tsc --watch\" \"nodemon -q dist/server/index.js\"",
+    "build": "yarn run compile && yarn run build-fr",
     "build-fr": "react-scripts build",
     "start-fr": "react-scripts start",
     "test": "dotenv -e .env.test -- jest",
