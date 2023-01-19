@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "npx nx run-many --target=serve --projects=client,api"
+    "start": "npx nx run-many --target=serve --projects=client,api",
+    "prepare": "husky install",
+    "lint": "npx nx lint client && npx nx lint api",
+    "test": "npx nx test client && npx nx test api",
+    "build": "npx nx build client && npx nx build api"
   },
   "private": true,
   "dependencies": {
@@ -64,6 +68,7 @@
     "husky": "^8.0.3",
     "jest": "28.1.1",
     "jest-environment-jsdom": "28.1.1",
+    "jest-mock-extended": "^3.0.1",
     "jest-preset-angular": "~12.2.3",
     "nx": "15.5.1",
     "prettier": "^2.6.2",

@@ -1,6 +1,6 @@
-import { prismaMock } from '../../../../prisma/singleton'
-import { authorize } from '../../src/security'
-import { dummyUser } from '../data/user'
+import { prismaMock } from '@menu-builder/prisma-mock'
+import { authorize } from '.'
+import { dummyUser } from '../../__test__/data/user'
 
 describe('Authorize', () => {
   test('should return with false values', async () => {

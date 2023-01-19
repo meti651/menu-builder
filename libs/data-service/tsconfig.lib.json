@@ -5,6 +5,6 @@
     "declaration": true,
     "types": []
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../prisma-mock/src/lib/singleton.ts"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts"]
 }

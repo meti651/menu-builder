@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@menu-builder/data-service": ["libs/data-service/src/index.ts"],
+      "@menu-builder/prisma-mock": ["libs/prisma-mock/src/index.ts"],
       "@menu-builder/types": ["libs/types/src/index.ts"]
     }
   },
