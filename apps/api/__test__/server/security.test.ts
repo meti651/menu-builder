@@ -1,5 +1,5 @@
-import { prismaMock } from '../../prisma/singleton'
-import { authorize } from '../../server/security'
+import { prismaMock } from '../../../../prisma/singleton'
+import { authorize } from '../../src/security'
 import { dummyUser } from '../data/user'
 
 describe('Authorize', () => {
