@@ -1,21 +1,21 @@
 {
-  "name": "prisma-mock",
+  "name": "password-hash",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/prisma-mock/src",
+  "sourceRoot": "libs/password-hash/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/prisma-mock/**/*.ts"]
+        "lintFilePatterns": ["libs/password-hash/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/prisma-mock/jest.config.ts",
+        "jestConfig": "libs/password-hash/jest.config.ts",
         "passWithNoTests": true
       }
     }

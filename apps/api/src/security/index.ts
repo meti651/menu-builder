@@ -1,10 +1,9 @@
 import { findUserByEmail } from '@menu-builder/data-service'
 import { IUserLoginData } from './type'
-import bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs'
 
 export const authorize = async (email: string, psw: string): Promise<IUserLoginData> => {
   const user = await findUserByEmail(email)
-
   if (!user) {
     return {
       isLoggedIn: false,

@@ -9,6 +9,7 @@ import login from './login'
 import helmet from 'helmet'
 import session = require('cookie-session')
 import cors = require('cors')
+import '../type-stubs'
 
 const server = express()
 

@@ -13,10 +13,12 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
       "@menu-builder/data-service": ["libs/data-service/src/index.ts"],
-      "@menu-builder/prisma-mock": ["libs/prisma-mock/src/index.ts"],
+      "@menu-builder/password-hash": ["libs/password-hash/src/index.ts"],
+      "@menu-builder/test-data": ["libs/test-data/src/index.ts"],
       "@menu-builder/types": ["libs/types/src/index.ts"]
     }
   },

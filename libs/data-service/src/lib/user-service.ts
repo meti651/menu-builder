@@ -1,6 +1,6 @@
-import { dataServiceInstance } from './data-service';
+import { dataServiceInstance } from './data-service'
 
-export const findUserById = async (userId: string) => {
+export async function findUserById(userId: string) {
   return await dataServiceInstance.user.findUnique({
     where: {
       id: userId
@@ -8,7 +8,7 @@ export const findUserById = async (userId: string) => {
   })
 }
 
-export const findUserByEmail = async (userEmail: string) => {
+export async function findUserByEmail(userEmail: string) {
   return await dataServiceInstance.user.findUnique({
     where: {
       email: userEmail

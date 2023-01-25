@@ -1,4 +1,4 @@
-import { hashPassword } from '../../src/utility/hash.utility'
+import { hashPassword } from '@menu-builder/password-hash'
 
 export const dummyUser = {
   id: '1',

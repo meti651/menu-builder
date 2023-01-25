@@ -1,21 +1,24 @@
-import { prismaMock } from '@menu-builder/prisma-mock'
+import { prismaMock } from '@menu-builder/data-service'
 import { authorize } from '.'
-import { dummyUser } from '../../__test__/data/user'
+import { dummyUser } from '@menu-builder/test-data'
 
 describe('Authorize', () => {
   test('should return with false values', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null)
-    await expect(authorize('testEmail', 'testPsw')).resolves.toEqual({ isLoggedIn: false, exists: false })
+    const response = await authorize('testEmail', 'testPsw')
+    expect(response).toEqual({ isLoggedIn: false, exists: false })
   })
 
   test('should return with the true on the exists property', async () => {
     prismaMock.user.findUnique.mockResolvedValue(dummyUser)
-    await expect(authorize(dummyUser.email, 'wrong-password')).resolves.toEqual({ isLoggedIn: false, exists: true })
+    const response = await authorize(dummyUser.email, 'wrong-password')
+    expect(response).toEqual({ isLoggedIn: false, exists: true })
   })
 
   test('should authorized user', async () => {
     prismaMock.user.findUnique.mockResolvedValue(dummyUser)
-    await expect(authorize(dummyUser.email, 'Test_Psw')).resolves.toEqual({
+    const response = await authorize(dummyUser.email, 'Test_Psw')
+    expect(response).toEqual({
       isLoggedIn: true,
       exists: true,
       id: dummyUser.id
