@@ -1,3 +1,6 @@
 export * from './lib/data-service'
 export * from './lib/data-service-mock'
 export * from './lib/user-service'
+export * from './lib/ingredient-service'
+export * from './lib/menu-service'
+export * from './lib/recipe-service'
